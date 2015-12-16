@@ -206,7 +206,7 @@ Effort_params={
     'u_min':Effort_min,
     'u_max':Effort_max,
     'function':lambda u:(log10(u)),
-    'title':r'Effort',
+    'title':r'Allocation',
     'title_y_shift':0.75,
     'tick_levels':3,
     'tick_text_levels':2,
