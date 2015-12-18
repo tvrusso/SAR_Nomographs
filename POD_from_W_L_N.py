@@ -1,9 +1,13 @@
 """
 
-POD_from_W_v_t_simplified
+POD_from_W_L_T.py
 
-  This one is like POD_from_W_v_t with the "effective sweep rate" and "effectiveness" scales turned into just plain index lines, by making 
-  part of the nomograph type 3.
+  Compute POD/Coverage from sweep width, one searcher's track length, and number of searchers on team
+
+  C = WNL/A = (W/5280)*N*L/A
+
+  log C = log W-log(5280) + log(N) + log(L) - log(A)
+  log C - log W + log(5280) - log N - log L + log A = 0
 
   Rd to W is done in one type 1 nomograph, and the rest in type 3
 """
@@ -13,30 +17,25 @@ from pynomo.nomographer import *
 
 Wmin=10
 Wmax=200
-Vmin=.75
-Vmax=3
-ESR_min=(Wmin/5280.0)*Vmin
-ESR_max=(Wmax/5280.0)*Vmax
+Lmin=.5
+Lmax=10
 Amin=.25
 Amax=10
-Emin=.005
-Emax=.5
-Effort_min=5
-Effort_max=300
+N_min=3
+N_max=10
 Coverage_min=.3
 Coverage_max=3
 
-print "Coverage range: ",Coverage_min,Coverage_max
-print "Effort range: ",Effort_min,Effort_max
-
 Isopleth_W=95
 Isopleth_W_mi=Isopleth_W/5280.0
-Isopleth_V=1.0
-Isopleth_ESR=Isopleth_W_mi*Isopleth_V
-Isopleth_A=1
-Isopleth_Effectiveness=Isopleth_ESR/Isopleth_A
-Isopleth_Effort=55
+Isopleth_A=.5
 
+Isopleth_L = 5.0   # Miles
+Isopleth_N = 6     # searchers
+
+Isopleth_C = Isopleth_W_mi*Isopleth_L*Isopleth_N/Isopleth_A
+
+print "Computed coverage should be ",Isopleth_C
 Rd_params={
     'tag':'Rd',
     'u_min':Wmin/1.8,
@@ -136,11 +135,11 @@ W_params_meters={
     'scale_type':'log',
 }
 
-V_params={
-    'u_min':Vmin,
-    'u_max':Vmax,
+L_params={
+    'u_min':Lmin,
+    'u_max':Lmax,
     'function':lambda u:(-log10(u)),
-    'title':r'Speed',
+    'title':r'Track length',
     'title_y_shift':.8,
     'tick_levels':3,
     'tick_text_levels':2,
@@ -148,7 +147,7 @@ V_params={
     'extra_titles':[
         {'dx':-1,
          'dy':.25,
-         'text':r'\small MPH',
+         'text':r'\small Miles',
          'width':5,
          }]
 }
@@ -170,20 +169,20 @@ A_params={
          }]
 }
 
-Effort_params={
-    'u_min':Effort_min,
-    'u_max':Effort_max,
+N_params={
+    'u_min':N_min,
+    'u_max':N_max,
     'function':lambda u:(-log10(u)),
-    'title':r'Allocation',
+    'title':r'N',
     'title_y_shift':0.75,
-    'tick_levels':3,
-    'tick_text_levels':2,
+    'tick_levels':1,
+    'tick_text_levels':1,
     'tick_side':'left',
-    'scale_type':'log',
+    'scale_type':'linear',
     'extra_titles':[
         {'dx':-1.5,
          'dy':0.2,
-         'text':r'\small (searcher-hours)',
+         'text':r'\small (searchers)',
          'width':5,
          }]
 }
@@ -225,7 +224,7 @@ POD_params={
          'width':5,
          },
         {'dx':-1.25,
-         'dy':-11,
+         'dy':-10,
          'text':r'\small $POD = 1-\exp(-Wvt/A)$',
          'width':5,
          },
@@ -263,18 +262,18 @@ block_main_params={
     'block_type':'type_3',
     'width':10.0,
     'height':20.0,
-    'f_params':[W_params,V_params,A_params,Effort_params,Coverage_params],
+    'f_params':[W_params,L_params,N_params,A_params,Coverage_params],
     'reference_titles':['A','B'],
-    'isopleth_values':[[Isopleth_W,Isopleth_V,Isopleth_A,Isopleth_Effort,'x']],
+    'isopleth_values':[[Isopleth_W,Isopleth_L,Isopleth_N,Isopleth_A,'x']],
 }
     
 main_params={
-              'filename':'POD_from_W_v_t_simplified.pdf',
+              'filename':'POD_from_W_L_N.pdf',
               'paper_height':20,
               'paper_width':20,
               'block_params':[block_main_params,block_3b_params,block_0_params,block_0b_params,block_1b_params],
               'transformations':[('rotate',0.01),('scale paper',),('polygon',)],
-              'title_str':r'\large POD Calculator for Planning',
+              'title_str':r'\large POD Calculator for Debriefing',
               'title_x':12.5,
               'title_y':0,
               }
