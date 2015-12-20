@@ -23,7 +23,7 @@ Emin=.005
 Emax=.5
 Effort_min=5
 Effort_max=300
-Coverage_min=.3
+Coverage_min=.27
 Coverage_max=3
 
 print "Coverage range: ",Coverage_min,Coverage_max
@@ -194,6 +194,7 @@ Coverage_params={
     'u_max':Coverage_max,
     'function':lambda u:(log10(u)),
     'title':r'\large Coverage',
+    'title_x_shift':-1,
     'tick_levels':3,
     'tick_text_levels':2,
     'tick_side':'left',
@@ -202,35 +203,116 @@ Coverage_params={
 
 def POD(C):
     return (1-exp(-C))*100
-def Coverage(POD):
-    return(-log(1-POD/100))
 
-POD_params={
+def PODint(C):
+    return int((1-exp(-C))*1000.0)/10.0
+
+def Coverage(POD):
+    return(-log(1-POD/100.0))
+
+#POD_params={
+#    'tag':'pod',
+#    'u_min':35.0,
+#    'u_max':90.0,
+#    'function':lambda u:(u),
+#    'align_func':Coverage,
+#    'title':r'POD',
+#    'title_x_shift':0.5,
+#    'title_y_shift':0.45,
+#    'tick_levels':3,
+#    'tick_text_levels':2,
+#    'tick_side':'right',
+#    'scale_type':'linear',
+#    'extra_titles':[
+#        {'dx':-.5,
+#         'dy':0.15,
+#         'text':r'\small \%',
+#         'width':5,
+#         },
+#        {'dx':-1.25,
+#         'dy':-10,
+#         'text':r'\small $POD = 1-\exp(-Wvt/A)$',
+#         'width':5,
+#         },
+#    ]
+#
+#}
+# POD_params={
+#     'tag':'pod',
+#     'u_min':Coverage_min,
+#     'u_max':Coverage_max,
+#     'function':lambda u:(log10(u)),
+#     'align_func':lambda u:u,
+#     'title':r'POD',
+#     'title_x_shift':0.75,
+#     'title_y_shift':0.45,
+#     'tick_levels':3,
+#     'tick_text_levels':2,
+#     'tick_side':'right',
+#     'scale_type':'manual line',
+#     'manual_axis_data':{.3:PODint(.3),
+#                         .4:PODint(.4),
+#                         .5:PODint(.5),
+#                         .6:PODint(.6),
+#                         .7:PODint(.7),
+#                         .8:PODint(.8),
+#                         .9:PODint(.9),
+#                         1:PODint(1),
+#                         1.2:PODint(1.2),
+#                         1.4:PODint(1.4),
+#                         1.6:PODint(1.6),
+#                         1.8:PODint(1.8),
+#                         2:PODint(2),
+#                         2.5:PODint(2.5),
+#                         3:PODint(3),
+#                         },
+#     'extra_titles':[
+#         {'dx':-.25,
+#          'dy':0.15,
+#          'text':r'\small \%',
+#          'width':5,
+#          },
+#         {'dx':-1.25,
+#          'dy':-12,
+#          'text':r'\small $POD = 1-\exp(-Wvt/A)$',
+#          'width':5,
+#          },
+#     ]
+# }
+
+POD_Axis_Range={}
+for POD in range(25,96):
+    if (POD%5 == 0):
+        POD_Axis_Range[Coverage(POD)]='%d'%POD
+    else:
+        POD_Axis_Range[Coverage(POD)]=''
+
+        POD_params={
     'tag':'pod',
-    'u_min':25.0,
-    'u_max':95.0,
-    'function':lambda u:(u),
-    'align_func':Coverage,
+    'u_min':Coverage_min,
+    'u_max':Coverage_max,
+    'function':lambda u:(log10(u)),
+    'align_func':lambda u:u,
     'title':r'POD',
-    'title_x_shift':0.5,
+    'title_x_shift':0.75,
     'title_y_shift':0.45,
     'tick_levels':3,
     'tick_text_levels':2,
     'tick_side':'right',
-    'scale_type':'linear',
+    'scale_type':'manual line',
+    'manual_axis_data':POD_Axis_Range,
     'extra_titles':[
-        {'dx':-.5,
+        {'dx':-.25,
          'dy':0.15,
          'text':r'\small \%',
          'width':5,
          },
         {'dx':-1.25,
-         'dy':-11,
+         'dy':-12,
          'text':r'\small $POD = 1-\exp(-Wvt/A)$',
          'width':5,
          },
     ]
-
 }
 
 block_0_params={
