@@ -2,33 +2,53 @@
 
 POD_from_W_v_t_simplified
 
-  This one is like POD_from_W_v_t with the "effective sweep rate" and "effectiveness" scales turned into just plain index lines, by making 
+PyNomo program to generate a "Planning" nomograph to compute anticipated POD
+from a given assignment of searcher-hours, or searcher-hours required to 
+achieve a desired POD.
+
+  C = Wvt/A = (W/5280)*v*t/A
+
+  Taking log of both sides, this defines the type 3 nomograph:
+  log C = log W-log(5280) + log(v) + log(t) - log(A)
+  or 
+  log C - log W + log(5280) - log v - log t + log A = 0
+
+  This one is like POD_from_W_v_t with the "effective sweep rate" and
+  "effectiveness" scales turned into just plain index lines, by making
   part of the nomograph type 3.
 
   Rd to W is done in one type 1 nomograph, and the rest in type 3
+
 """
 import sys
 sys.path.insert(0, "..")
 from pynomo.nomographer import *
 
+# Scale limit parameters
+# Range of sweep widths
 Wmin=10
 Wmax=200
+# range of searcher speed (foot searchers, horses, or other slow-movers)
 Vmin=.75
 Vmax=3
+# Range of effective sweep rates (not used anymore, now that the ESR scale
+# has been turned into an unlabled index line)
 ESR_min=(Wmin/5280.0)*Vmin
 ESR_max=(Wmax/5280.0)*Vmax
+# Range of areas
 Amin=.25
 Amax=10
+# Range of effectiveness scale (not used, this scale is now an index line)
 Emin=.005
 Emax=.5
+# Range of assigned effort in searcher-hours
 Effort_min=5
 Effort_max=300
+# Range of coverage scale
 Coverage_min=.27
 Coverage_max=3
 
-print "Coverage range: ",Coverage_min,Coverage_max
-print "Effort range: ",Effort_min,Effort_max
-
+# Example isopleth values
 Isopleth_W=95
 Isopleth_W_mi=Isopleth_W/5280.0
 Isopleth_V=1.0
@@ -37,6 +57,8 @@ Isopleth_A=1
 Isopleth_Effectiveness=Isopleth_ESR/Isopleth_A
 Isopleth_Effort=55
 
+
+# Primary range of detection scale
 Rd_params={
     'tag':'Rd',
     'u_min':Wmin/1.8,
@@ -55,6 +77,8 @@ Rd_params={
          'width':5,
          }]
 }
+
+# Secondary range of detection scale, in meters
 Rd_params_meters={
     'tag':'Rd',
     'u_min':Wmin/1.8*0.3048,
@@ -68,6 +92,9 @@ Rd_params_meters={
     'tick_side':'right',
     'scale_type':'log',
 }
+
+# Scale for object visibility, high, average, low, per Koester et. al,
+# WILDERNESS &ENVIRONMENTALMEDICINE, 25, 132-142 (2014)
 Multiplier_params={
     'u_min':1.1,
     'u_max':1.8,
@@ -85,6 +112,8 @@ Multiplier_params={
                         1.8:'High'
                         },
 }
+
+# Sweep width primary scale
 W0_params={
     'tag':'SweepWidth',
     'u_min':Wmin,
@@ -104,6 +133,8 @@ W0_params={
          }]
 }
 
+# Sweep width primary scale, duplicated for second nomograph, lined up with
+# W0 scale
 W_params={
     'tag':'SweepWidth',
     'u_min':Wmin,
@@ -121,7 +152,10 @@ W_params={
          'text':r'\small $ft$',
          'width':5,
          }]
-                }
+}
+
+
+# Sweep width secondary scale, in meters
 W_params_meters={
     'tag':'SweepWidth',
     'u_min':Wmin*0.3048,
@@ -136,6 +170,7 @@ W_params_meters={
     'scale_type':'log',
 }
 
+# Searcher speed scale, in MPH
 V_params={
     'u_min':Vmin,
     'u_max':Vmax,
@@ -153,6 +188,7 @@ V_params={
          }]
 }
 
+# Area scale in square miles
 A_params={
     'u_min':Amin,
     'u_max':Amax,
@@ -170,6 +206,7 @@ A_params={
          }]
 }
 
+# Effort in searcher-hours
 Effort_params={
     'u_min':Effort_min,
     'u_max':Effort_max,
@@ -188,6 +225,7 @@ Effort_params={
          }]
 }
 
+# Coverage scale
 Coverage_params={
     'tag':'pod',
     'u_min':Coverage_min,
@@ -210,76 +248,7 @@ def PODint(C):
 def Coverage(POD):
     return(-log(1-POD/100.0))
 
-#POD_params={
-#    'tag':'pod',
-#    'u_min':35.0,
-#    'u_max':90.0,
-#    'function':lambda u:(u),
-#    'align_func':Coverage,
-#    'title':r'POD',
-#    'title_x_shift':0.5,
-#    'title_y_shift':0.45,
-#    'tick_levels':3,
-#    'tick_text_levels':2,
-#    'tick_side':'right',
-#    'scale_type':'linear',
-#    'extra_titles':[
-#        {'dx':-.5,
-#         'dy':0.15,
-#         'text':r'\small \%',
-#         'width':5,
-#         },
-#        {'dx':-1.25,
-#         'dy':-10,
-#         'text':r'\small $POD = 1-\exp(-Wvt/A)$',
-#         'width':5,
-#         },
-#    ]
-#
-#}
-# POD_params={
-#     'tag':'pod',
-#     'u_min':Coverage_min,
-#     'u_max':Coverage_max,
-#     'function':lambda u:(log10(u)),
-#     'align_func':lambda u:u,
-#     'title':r'POD',
-#     'title_x_shift':0.75,
-#     'title_y_shift':0.45,
-#     'tick_levels':3,
-#     'tick_text_levels':2,
-#     'tick_side':'right',
-#     'scale_type':'manual line',
-#     'manual_axis_data':{.3:PODint(.3),
-#                         .4:PODint(.4),
-#                         .5:PODint(.5),
-#                         .6:PODint(.6),
-#                         .7:PODint(.7),
-#                         .8:PODint(.8),
-#                         .9:PODint(.9),
-#                         1:PODint(1),
-#                         1.2:PODint(1.2),
-#                         1.4:PODint(1.4),
-#                         1.6:PODint(1.6),
-#                         1.8:PODint(1.8),
-#                         2:PODint(2),
-#                         2.5:PODint(2.5),
-#                         3:PODint(3),
-#                         },
-#     'extra_titles':[
-#         {'dx':-.25,
-#          'dy':0.15,
-#          'text':r'\small \%',
-#          'width':5,
-#          },
-#         {'dx':-1.25,
-#          'dy':-12,
-#          'text':r'\small $POD = 1-\exp(-Wvt/A)$',
-#          'width':5,
-#          },
-#     ]
-# }
-
+# Define the POD ticks to line up correctly with corresponding coverage
 POD_Axis_Range={}
 for POD in range(25,96):
     if (POD%5 == 0):
@@ -287,7 +256,8 @@ for POD in range(25,96):
     else:
         POD_Axis_Range[Coverage(POD)]=''
 
-        POD_params={
+#POD  scale
+POD_params={
     'tag':'pod',
     'u_min':Coverage_min,
     'u_max':Coverage_max,
@@ -315,6 +285,8 @@ for POD in range(25,96):
     ]
 }
 
+# Define the nomographs
+# Block 0 is the nomograph for converting Range of Detection to Sweep Width
 block_0_params={
     'block_type':'type_1',
     'width':2.0,
@@ -324,23 +296,31 @@ block_0_params={
     'f3_params':Rd_params,
     'isopleth_values':[['x',1.6,Isopleth_W/1.6]],
 }
+
+# This is the meters scale for range of detection, so Rd measurements in
+# either units can be used
 block_0b_params={
     'block_type':'type_8',
     'f_params':Rd_params_meters,
     'isopleth_values':[['x']],
 }
 
+# This is the meters scale for sweep width, just in case users have W tables
+# in meters already --- they can then skip the Rd -> W computation.
 block_1b_params={
     'block_type':'type_8',
     'f_params':W_params_meters,
     'isopleth_values':[['x']],
 }
 
+# This is the POD scale, to be lined up with coverage scale
 block_3b_params={
     'block_type':'type_8',
     'f_params':POD_params,
     'isopleth_values':[['x']],
 }
+
+# This is the main nomograph block, computing coverage from W, V, t and A.
 block_main_params={
     'block_type':'type_3',
     'width':10.0,
@@ -349,7 +329,11 @@ block_main_params={
     'reference_titles':['A','B'],
     'isopleth_values':[[Isopleth_W,Isopleth_V,Isopleth_A,Isopleth_Effort,'x']],
 }
-    
+
+# Now generate the thing for real.
+# Note that the order of blocks in the block_params field makes no immediate
+# sense --- it is neither left-to-right nor right-to-left.  I had to move
+# things around here until the nomograph looked as I wanted it to.
 main_params={
               'filename':'POD_from_W_v_t_simplified.pdf',
               'paper_height':20,
