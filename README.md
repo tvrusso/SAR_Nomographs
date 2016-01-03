@@ -3,9 +3,9 @@
 This is a collection of hacks I created using [PyNomo](http://www.pynomo.org/).
 
 The purpose is to provide a simple, usable set of nomographs that
-search planners and debriefers can use to estimate POD or the effort
-required to achieve a given POD, without having to pull out a computer
-and spreadsheet program to do so.
+search planners and debriefers can use to estimate Probability of Detection 
+(POD) or the effort required to achieve a given POD, without having to pull 
+out a computer and spreadsheet program to do so.
 
 In order to generate the nomographs from the scripts (or hack on them), you 
 must first install PyNomo and all of its dependencies according to
