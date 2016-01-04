@@ -264,7 +264,7 @@ POD_params={
          },
         {'dx':-1.25,
          'dy':-12,
-         'text':r'\small $POD = 1-\exp(-Wvt/A)$',
+         'text':r'\small $POD = 1-\exp(-WNL/A)$',
          'width':5,
          },
     ]
