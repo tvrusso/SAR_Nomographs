@@ -60,8 +60,3 @@ familiarity with search theory and its application.  I drafted a tiny
 web page with some useful papers and books to read if you're
 interested in this subject.  It's at
 http://pages.swcp.com/~russo/searchtheoryrefs.html.
-
-
-
-
-
