@@ -52,7 +52,7 @@ repository, for those who cannot read LibreOffice documents.
 
 These nomographs were created first as a little joke I was going to
 present to a class on search theory at the 2015 New Mexico search and
-reference conference, ESCAPE, showing how search planners of the 1940s
+rescue conference, ESCAPE, showing how search planners of the 1940s
 might have computed the quantities in question.  Then it occurred to
 me that the nomograph would actually be useful even to search planners
 in the 21st century.  Effective use of these nomographs does require
