@@ -1,7 +1,7 @@
 # SAR_Nomographs
 
 This is a collection of hacks I created using
-[PyNomo](http://www.pynomo.org/).  Pynomo is also now on github at
+[PyNomo](http://lefakkomies.github.io/pynomo-doc/index.html).  Pynomo is also now on github at
 its author's repository, https://github.com/lefakkomies/pynomo.
 
 The purpose is to provide a simple, usable set of nomographs that
