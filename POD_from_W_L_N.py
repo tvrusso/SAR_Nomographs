@@ -16,6 +16,8 @@ POD_from_W_L_T.py
 import sys
 sys.path.insert(0, "..")
 from pynomo.nomographer import *
+from pyx import *
+from math import log,log10
 
 # Scale limit parameters
 # Range of sweep widths
@@ -44,7 +46,7 @@ Isopleth_N = 6     # searchers
 
 Isopleth_C = Isopleth_W_mi*Isopleth_L*Isopleth_N/Isopleth_A
 
-print "Computed coverage should be ",Isopleth_C
+print ("Computed coverage should be ",Isopleth_C)
 
 # Primary range of detection scale
 Rd_params={

@@ -23,6 +23,8 @@ achieve a desired POD.
 import sys
 sys.path.insert(0, "..")
 from pynomo.nomographer import *
+from pyx import *
+from math import log,log10
 
 # Scale limit parameters
 # Range of sweep widths
